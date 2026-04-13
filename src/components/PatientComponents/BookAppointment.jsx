@@ -15,10 +15,12 @@ export default function PatientCalendar() {
 
   const minSelectableDate = new Date();
   minSelectableDate.setHours(0, 0, 0, 0);
-
-  const selectedService = services.find(
-    (s) => s.service_id === selectedServiceId,
-  );
+  console.log(selectedServiceId);
+  const selectedService = services.find((s) => {
+    console.log(selectedServiceId);
+    console.log(s.service_id);
+    s.service_id === selectedServiceId;
+  });
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
