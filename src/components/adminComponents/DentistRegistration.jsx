@@ -4,7 +4,7 @@ import TableForm from "../TableForm";
 const DentistRegistration = () => {
   const [dentists, setDentists] = useState([]);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success] = useState("");
 
   const columns = [
     "Full Name",
@@ -28,36 +28,36 @@ const DentistRegistration = () => {
   };
 
   // ✅ Validation
-  const validateDentist = (dentist) => {
-    if (
-      !dentist.name ||
-      !dentist.email ||
-      !dentist.phone ||
-      !dentist.specialization ||
-      !dentist.experience ||
-      !dentist.licenseNumber
-    ) {
-      return "All fields are required.";
-    }
+  // const validateDentist = (dentist) => {
+  //   if (
+  //     !dentist.name ||
+  //     !dentist.email ||
+  //     !dentist.phone ||
+  //     !dentist.specialization ||
+  //     !dentist.experience ||
+  //     !dentist.licenseNumber
+  //   ) {
+  //     return "All fields are required.";
+  //   }
 
-    if (dentist.experience < 0) {
-      return "Experience cannot be negative.";
-    }
+  //   if (dentist.experience < 0) {
+  //     return "Experience cannot be negative.";
+  //   }
 
-    if (dentist.licenseNumber < 0) {
-      return "License Number cannot be negative.";
-    }
+  //   if (dentist.licenseNumber < 0) {
+  //     return "License Number cannot be negative.";
+  //   }
 
-    const phoneRegex = /^\d{11}$/;
-    if (!phoneRegex.test(dentist.phone)) {
-      return "Phone number must be 11 digits.";
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(dentist.email)) {
-      return "Invalid email format.";
-    }
-    return null;
-  };
+  //   const phoneRegex = /^\d{11}$/;
+  //   if (!phoneRegex.test(dentist.phone)) {
+  //     return "Phone number must be 11 digits.";
+  //   }
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailRegex.test(dentist.email)) {
+  //     return "Invalid email format.";
+  //   }
+  //   return null;
+  // };
 
   // ✅ Fetch all dentists on load
   useEffect(() => {
