@@ -11,7 +11,6 @@ export default function PatientCalendar() {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [receiptFile, setReceiptFile] = useState(null);
   const [services, setServices] = useState([]);
-  const [formDefaultDate, setFormDefaultDate] = useState(null);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
 
   const minSelectableDate = new Date();
@@ -24,7 +23,7 @@ export default function PatientCalendar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
 
-  // Fetch services
+  // FETCH SERVICES
   useEffect(() => {
     if (showFormModal) {
       fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllServices")
@@ -34,7 +33,7 @@ export default function PatientCalendar() {
     }
   }, [showFormModal]);
 
-  // Fetch doctors
+  // FETCH DOCTORS
   useEffect(() => {
     if (showFormModal) {
       fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllDoctor")
@@ -62,11 +61,10 @@ export default function PatientCalendar() {
     }
 
     setSelectedSlot(slots);
-    setFormDefaultDate(clickedDate);
     setShowFormModal(true);
   };
 
-  // SUBMIT
+  // SUBMIT APPOINTMENT
   const handleSubmit = async (formData) => {
     try {
       if (!formData.timeSlot) {
@@ -115,7 +113,7 @@ export default function PatientCalendar() {
           },
         );
       }
-      // GCASH / MAYA
+      // GCASH / PAYMAYA
       else {
         if (!receiptFile) {
           toast.error("Please upload your payment receipt.");
