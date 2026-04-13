@@ -21,7 +21,7 @@ export default function AdminAppointmentRequests() {
 
   useEffect(() => {
     fetchAppointments();
-  }, [fetchAppointments]);
+  }, [appointments]);
 
   // Approve / Deny action
   const updateStatus = async (id, status, reason = "") => {
