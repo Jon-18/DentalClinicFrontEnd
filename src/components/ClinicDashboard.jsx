@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   LineChart,
   Line,
@@ -24,16 +24,12 @@ export default function ClinicDashboard() {
   const [pendingAdmin, setPendingAdmin] = useState(0);
   const [patientsCount, setPatientsCount] = useState(0);
 
-
-  useEffect(() => {
-    fetchData();
-  }, [filter]);
-
-  const fetchData = async () => {
+  // ✅ Fetch dashboard chart data
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:5000/api/getDataInDashboard/dashboard?filter=${filter}`
+        `http://localhost:5000/api/getDataInDashboard/dashboard?filter=${filter}`,
       );
       const jsonData = await res.json();
 
@@ -46,96 +42,65 @@ export default function ClinicDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
 
-   
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // ✅ Fetch dentists
+  const fetchAllDoctor = useCallback(async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/dentists");
+      const jsonData = await res.json();
+      setDentistCount(jsonData.length);
+    } catch (err) {
+      setDentistCount(0);
+    }
+  }, []);
+
   useEffect(() => {
     fetchAllDoctor();
+  }, [fetchAllDoctor]);
+
+  // ✅ Fetch patients
+  const fetchAllPatients = useCallback(async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/patients");
+      const jsonData = await res.json();
+      setPatientsCount(jsonData.length);
+    } catch (err) {
+      setPatientsCount(0);
+    }
   }, []);
 
-
-  const fetchAllDoctor = async () => {
-  try {
-    setLoading(true);
-
-    const res = await fetch("http://localhost:5000/api/dentists");
-    const jsonData = await res.json();
-
-    setDentistCount(jsonData.length); // 👈 total count
-  } catch (err) {
-    setDentistCount(0);
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-useEffect(() => {
+  useEffect(() => {
     fetchAllPatients();
+  }, [fetchAllPatients]);
+
+  // ✅ Fetch appointments + pending count
+  const fetchAllAppointment = useCallback(async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/appointments");
+      const jsonData = await res.json();
+
+      setAppointmentCount(jsonData.length);
+
+      // ✅ FIXED: use filter instead of map
+      const pendingCount = jsonData.filter(
+        (item) => item.status === "Pending",
+      ).length;
+
+      setPendingAdmin(pendingCount);
+    } catch (err) {
+      setAppointmentCount(0);
+      setPendingAdmin(0);
+    }
   }, []);
 
-  const fetchAllPatients = async () => {
-  try {
-    setLoading(true);
-
-    const res = await fetch("http://localhost:5000/api/patients");
-    const jsonData = await res.json();
-
-    setPatientsCount(jsonData.length); // 👈 total count
-  } catch (err) {
-    setPatientsCount(0);
-  } finally {
-    setLoading(false);
-  }
-};
-
-    let allPendingStatus = 0;
-useEffect(() => {
+  useEffect(() => {
     fetchAllAppointment();
-  }, []);
-
-  const fetchAllAppointment = async () => {
-  try {
-    setLoading(true);
-
-    const res = await fetch("http://localhost:5000/api/appointments");
-    const jsonData = await res.json();
-    setAppointmentCount(jsonData.length); // 👈 total count
-    
-    const pendingAdminStatus = jsonData.map((data) => {
-      if(data.status == "Pending"){
-        allPendingStatus = allPendingStatus + 1;
-      }
-    })
-    setPendingAdmin(allPendingStatus);
-
-    
-  } catch (err) {
-    setAppointmentCount(0);
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-// useEffect(() => {
-//     fetchAllServices();
-//   }, []);
-
-//   const fetchAllServices = async () => {
-//   try {
-//     setLoading(true);
-
-//     const res = await fetch("http://localhost:5000/api/services");
-//     const jsonData = await res.json();
-
-//     // setAppointmentCount(jsonData.length); // 👈 total count
-//   } catch (err) {
-//     setAppointmentCount(0);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
+  }, [fetchAllAppointment]);
 
   return (
     <div className="dashboard">
@@ -143,25 +108,26 @@ useEffect(() => {
 
       {/* Top Cards */}
       <div className="cards">
-         <div className="card">
-            <h4>Pending Approval - Admin</h4>
-            <p>{pendingAdmin}</p>
-          </div>
-          <div className="card">
-            <h4>Appointments</h4>
-            <p>{appointmentCount}</p>
-          </div>
-          <div className="card">
-            <h4>Dentists</h4>
-            <p>{dentistCount}</p>
-          </div>
-            <div className="card">
-            <h4>Patients</h4>
-            <p>{patientsCount}</p>
-          </div>
-        
-      </div>
+        <div className="card">
+          <h4>Pending Approval - Admin</h4>
+          <p>{pendingAdmin}</p>
+        </div>
 
+        <div className="card">
+          <h4>Appointments</h4>
+          <p>{appointmentCount}</p>
+        </div>
+
+        <div className="card">
+          <h4>Dentists</h4>
+          <p>{dentistCount}</p>
+        </div>
+
+        <div className="card">
+          <h4>Patients</h4>
+          <p>{patientsCount}</p>
+        </div>
+      </div>
 
       {/* Filters */}
       <div className="filters">
@@ -180,8 +146,8 @@ useEffect(() => {
         <p>Loading...</p>
       ) : (
         <div className="main">
-          {/* Left Side */}
           <div className="charts">
+            {/* Appointments Chart */}
             <div className="chart-card">
               <h3>Appointments</h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -195,6 +161,7 @@ useEffect(() => {
               </ResponsiveContainer>
             </div>
 
+            {/* Income Chart */}
             <div className="chart-card">
               <h3>Income</h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -208,7 +175,6 @@ useEffect(() => {
               </ResponsiveContainer>
             </div>
           </div>
-
         </div>
       )}
     </div>

@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import CalendarBase from "../Calendar";
 import ModalForm from "../ModalForm";
 import MessageModal from "../ModalMessage";
-import {  dateFnsLocalizer } from "react-big-calendar";
+import { dateFnsLocalizer } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 
 export default function AdminCalendar() {
-  const [bookedAppointments, setBookedAppointments] = useState([]);
+  const [bookedAppointments] = useState([]);
   const [showFormModal, setShowFormModal] = useState(false);
   const [showModalMessage, setShowModalMessage] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -70,61 +70,60 @@ export default function AdminCalendar() {
   };
 
   /* SUBMIT */
- const handleFormSubmit = async (formData) => {
-  console.log(formData);
-  if (!formData.timeSlot) {
-    alert("Select time slot");
-    return;
-  }
+  const handleFormSubmit = async (formData) => {
+    console.log(formData);
+    if (!formData.timeSlot) {
+      alert("Select time slot");
+      return;
+    }
 
-  const selectedStart = new Date(formData.timeSlot);
+    const selectedStart = new Date(formData.timeSlot);
 
-  const selectedEnd = selectedSlot.availableSlots.find(
-    (slot) => slot.start.toISOString() === formData.timeSlot
-  )?.end;
+    const selectedEnd = selectedSlot.availableSlots.find(
+      (slot) => slot.start.toISOString() === formData.timeSlot,
+    )?.end;
 
-  const selectedService = services.find(
-    (s) => s.id === Number(selectedServiceId)
-  );
+    const selectedService = services.find(
+      (s) => s.id === Number(selectedServiceId),
+    );
 
-  const finalAppointment = {
-    ...formData,
-    price: selectedService?.price,
-    date: selectedStart.toISOString().split("T")[0],
-    startTime: selectedStart.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    endTime: selectedEnd?.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    const finalAppointment = {
+      ...formData,
+      price: selectedService?.price,
+      date: selectedStart.toISOString().split("T")[0],
+      startTime: selectedStart.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      endTime: selectedEnd?.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+    console.log(finalAppointment);
+    try {
+      const res = await fetch("http://localhost:5000/api/getAllPatient", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(finalAppointment),
+      });
+
+      const data = await res.json();
+
+      setShowFormModal(false);
+      setModalMessage("Appointment Created!");
+      setShowModalMessage(true);
+    } catch (err) {
+      console.error("ERROR:", err);
+      setModalMessage("Failed to create appointment");
+      setShowModalMessage(true);
+    }
   };
-  console.log(finalAppointment);
-  try {
-    const res = await fetch("http://localhost:5000/api/getAllPatient", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(finalAppointment),
-    });
-
-    const data = await res.json();
-
-
-    setShowFormModal(false);
-    setModalMessage("Appointment Created!");
-    setShowModalMessage(true);
-  } catch (err) {
-    console.error("ERROR:", err);
-    setModalMessage("Failed to create appointment");
-    setShowModalMessage(true);
-  }
-};
 
   const selectedService = services.find(
-    (s) => s.id === Number(selectedServiceId)
+    (s) => s.id === Number(selectedServiceId),
   );
 
   /* FORM FIELDS */
@@ -163,9 +162,7 @@ export default function AdminCalendar() {
       onChange: (value, form) => {
         setSelectedServiceId(value);
 
-        const selected = services.find(
-          (s) => s.id === Number(value)
-        );
+        const selected = services.find((s) => s.id === Number(value));
 
         if (!selected) return form;
 
