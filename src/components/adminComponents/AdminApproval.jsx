@@ -212,8 +212,8 @@ export default function AdminAppointmentRequests() {
 
               <button
                 onClick={async () => {
-                  await updateStatus(selectedApptId, "Denied by Admin", reason);
                   setIsModalOpen(false);
+                  await updateStatus(selectedApptId, "Denied by Admin", reason);
                   setReason("");
                 }}
                 style={{
