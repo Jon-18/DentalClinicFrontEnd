@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import CalendarBase from "../Calendar";
 import ModalForm from "../ModalForm";
 import MessageModal from "../ModalMessage";
-import { dateFnsLocalizer } from "react-big-calendar";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import getDay from "date-fns/getDay";
+// import { dateFnsLocalizer } from "react-big-calendar";
+// import format from "date-fns/format";
+// import parse from "date-fns/parse";
+// import startOfWeek from "date-fns/startOfWeek";
+// import getDay from "date-fns/getDay";
 
 export default function AdminCalendar() {
   const [bookedAppointments] = useState([]);
@@ -102,13 +102,13 @@ export default function AdminCalendar() {
     };
     console.log(finalAppointment);
     try {
-      const res = await fetch("http://localhost:5000/api/getAllPatient", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(finalAppointment),
-      });
+      // const res = await fetch("http://localhost:5000/api/getAllPatient", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(finalAppointment),
+      // });
 
       // const data = await res.json();
 
