@@ -17,8 +17,6 @@ export default function PatientCalendar() {
   minSelectableDate.setHours(0, 0, 0, 0);
   console.log(selectedServiceId);
   const selectedService = services.find((s) => {
-    console.log(selectedServiceId);
-    console.log(s.service_id);
     s.service_id === selectedServiceId;
   });
 
