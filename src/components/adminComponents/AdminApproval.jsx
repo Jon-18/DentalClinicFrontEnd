@@ -76,7 +76,7 @@ export default function AdminAppointmentRequests() {
                 <td>
                   {appt.receiptPath ? (
                     <a
-                      href={`${appt.receiptPath}`}
+                      href={`https://dentalclinicbackend-1qfr.onrender.com/${appt.receiptPath}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#0077cc" }}
