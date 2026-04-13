@@ -1,0 +1,51 @@
+.table-container {
+  margin: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: hsl(0, 0%, 99%);
+  padding: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f4f4f4; /* dental theme */
+  color: #252525;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #e0f7f1;
+}
+
+.table-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #00796b;
+  margin-bottom: 10px;
+}
+
+.table-title{
+  color: #252525;
+}
+
+.table-searchbar {
+  width: 20%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

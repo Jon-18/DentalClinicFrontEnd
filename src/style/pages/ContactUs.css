@@ -1,0 +1,40 @@
+.container-contact-us-page{
+  display: flex;
+}
+
+.contact-us-page h1{
+   color:#0077b6;
+   text-align: center;
+}
+
+.contact-box{
+  margin-left: 9em;
+  margin-top: 3em;
+  padding: 2em;
+  width: 40vw;
+  height: 40vh;
+  background-color: rgb(218, 229, 243);
+  border-radius: 3em;
+}
+
+.contact-box h3{
+  color: #0077b6;
+}
+
+.contact-box .icon{
+  margin-right: 1em;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  padding:2px;
+}
+
+.contact-box a{
+  text-decoration: none;
+  color: black;
+}
+
+.clinic-hours table tr td{
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #0077b6;
+}

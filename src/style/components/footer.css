@@ -1,0 +1,12 @@
+.footer {
+  margin-top: 5em;
+  background-color: #9799ff;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  height: 2em;
+  padding-top: 0.3em;
+  padding-bottom: 1em;
+}
+.footer-center{
+  text-align: center;
+}

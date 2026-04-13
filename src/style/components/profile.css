@@ -1,0 +1,104 @@
+/* src/components/Profile/Profile.css */
+
+.profile-container {
+  max-width: 650px;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-family: "Inter", sans-serif;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.profile-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e1e1e;
+  font-weight: 600;
+}
+
+.profile-field {
+  margin-bottom: 18px;
+}
+
+.profile-field label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+  text-transform: capitalize;
+}
+
+.profile-field span {
+  display: block;
+  padding: 8px 12px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  color: #555;
+  border: 1px solid #eee;
+}
+
+.profile-field input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+
+.profile-field input:focus {
+  border-color: #1890ff;
+  outline: none;
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.profile-buttons button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.profile-buttons button:hover {
+  transform: translateY(-1px);
+}
+
+/* Button Colors */
+.btn-edit {
+  background: #1890ff;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background: #40a9ff;
+}
+
+.btn-save {
+  background: #52c41a;
+  color: #fff;
+}
+
+.btn-save:hover {
+  background: #73d13d;
+}
+
+.btn-cancel {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+.btn-cancel:hover {
+  background: #ff7875;
+}
