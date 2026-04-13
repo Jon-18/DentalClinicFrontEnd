@@ -23,13 +23,13 @@ export default function AdminCalendar() {
 
   const locales = { "en-US": require("date-fns/locale/en-US") };
 
-  const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-  });
+  // const localizer = dateFnsLocalizer({
+  //   format,
+  //   parse,
+  //   startOfWeek,
+  //   getDay,
+  //   locales,
+  // });
 
   /* LOAD DATA */
   useEffect(() => {
@@ -110,7 +110,7 @@ export default function AdminCalendar() {
         body: JSON.stringify(finalAppointment),
       });
 
-      const data = await res.json();
+      // const data = await res.json();
 
       setShowFormModal(false);
       setModalMessage("Appointment Created!");
