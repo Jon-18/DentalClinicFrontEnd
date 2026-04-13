@@ -84,7 +84,7 @@ export default function AdminCalendar() {
     )?.end;
 
     const selectedService = services.find(
-      (s) => s.id === Number(selectedServiceId),
+      (s) => s.service_id === selectedServiceId,
     );
 
     const finalAppointment = {
@@ -123,7 +123,7 @@ export default function AdminCalendar() {
   };
 
   const selectedService = services.find(
-    (s) => s.id === Number(selectedServiceId),
+    (s) => s.service_id === selectedServiceId,
   );
 
   /* FORM FIELDS */
@@ -162,7 +162,7 @@ export default function AdminCalendar() {
       onChange: (value, form) => {
         setSelectedServiceId(value);
 
-        const selected = services.find((s) => s.id === Number(value));
+        const selected = services.find((s) => s.service_id === value);
 
         if (!selected) return form;
 
