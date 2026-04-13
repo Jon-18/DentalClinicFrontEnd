@@ -11,7 +11,7 @@ export default function PatientCalendar() {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [receiptFile, setReceiptFile] = useState(null);
   const [services, setServices] = useState([]);
-  const [setFormDefaultDate] = useState(null);
+  const [formDefaultDate, setFormDefaultDate] = useState(null);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
 
   const minSelectableDate = new Date();
@@ -24,6 +24,7 @@ export default function PatientCalendar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
 
+  // Fetch services
   useEffect(() => {
     if (showFormModal) {
       fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllServices")
@@ -33,7 +34,7 @@ export default function PatientCalendar() {
     }
   }, [showFormModal]);
 
-  // Fetch doctors when modal opens
+  // Fetch doctors
   useEffect(() => {
     if (showFormModal) {
       fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllDoctor")
@@ -43,7 +44,7 @@ export default function PatientCalendar() {
     }
   }, [showFormModal]);
 
-  // Handle calendar slot or date click
+  // SLOT SELECT
   const handleSlotSelect = (slotInfo, generateSlots) => {
     const clickedDate = new Date(slotInfo.start);
     clickedDate.setHours(0, 0, 0, 0);
@@ -54,7 +55,8 @@ export default function PatientCalendar() {
     }
 
     const slots = generateSlots(slotInfo.start);
-    if (slots.length === 0) {
+
+    if (!slots || slots.length === 0) {
       toast.error("No available slots for this date.");
       return;
     }
@@ -64,9 +66,9 @@ export default function PatientCalendar() {
     setShowFormModal(true);
   };
 
+  // SUBMIT
   const handleSubmit = async (formData) => {
     try {
-      // ✅ Validate time slot
       if (!formData.timeSlot) {
         toast.error("Please select a time slot");
         return;
@@ -83,14 +85,12 @@ export default function PatientCalendar() {
         return;
       }
 
-      // ✅ Build final object
       const finalAppointment = {
         ...formData,
         price: selectedService?.price,
         user_id: userId,
         email: user?.email,
         paymentMethod,
-        contactNumber: formData.contactNumber,
         date: selectedStart.toISOString().split("T")[0],
         startTime: selectedStart.toLocaleTimeString([], {
           hour: "2-digit",
@@ -102,24 +102,20 @@ export default function PatientCalendar() {
         }),
       };
 
-      console.log("Final Appointment:", finalAppointment);
-
       let response;
 
-      // ✅ CASH FLOW
+      // CASH
       if (paymentMethod === "cash") {
         response = await fetch(
           "https://dentalclinicbackend-1qfr.onrender.com/api/appointments/create",
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(finalAppointment),
           },
         );
       }
-      // ✅ GCASH / PAYMAYA FLOW
+      // GCASH / MAYA
       else {
         if (!receiptFile) {
           toast.error("Please upload your payment receipt.");
@@ -139,26 +135,21 @@ export default function PatientCalendar() {
         );
       }
 
-      // ✅ Read response safely
       const text = await response.text();
 
       let data;
       try {
         data = JSON.parse(text);
-      } catch (err) {
-        console.error("❌ Server returned non-JSON:", text);
+      } catch {
         toast.error("Server error: Invalid response");
         return;
       }
 
-      // ✅ Handle HTTP errors
       if (!response.ok) {
-        console.error("❌ Server error:", data);
         toast.error(data.message || "Failed to submit appointment");
         return;
       }
 
-      // ✅ Success
       toast.success(
         paymentMethod === "cash"
           ? "Appointment Submitted!"
@@ -167,22 +158,14 @@ export default function PatientCalendar() {
 
       setShowFormModal(false);
     } catch (error) {
-      console.error("❌ Unexpected error:", error);
+      console.error(error);
       toast.error("Something went wrong");
     }
   };
 
   return (
     <div style={{ margin: "50px" }}>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnHover
-        theme="light"
-      />
+      <ToastContainer position="top-right" autoClose={2000} />
 
       <h2>🧍 Patient Appointment Booking</h2>
 
@@ -217,34 +200,17 @@ export default function PatientCalendar() {
                 label: `${s.service_name} - ₱${s.price}`,
                 value: s.id,
               })),
-
-              /* ✅ UPDATE PRICE WITHOUT RESET */
               onChange: (value, form) => {
                 setSelectedServiceId(value);
-
-                const selected = services.find((s) => s.id === Number(value));
-
-                if (!selected) return form;
-
-                return {
-                  ...form,
-                  services: value,
-                };
+                return { ...form, services: value };
               },
             },
             {
               type: "custom",
               component: (
                 <div>
-                  <label>price</label>
-                  <div
-                    style={{
-                      padding: "10px",
-                      background: "#f5f5f5",
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                    }}
-                  >
+                  <label>Price</label>
+                  <div style={{ padding: "10px", fontWeight: "bold" }}>
                     ₱{selectedService?.price || "--"}
                   </div>
                 </div>
@@ -275,7 +241,6 @@ export default function PatientCalendar() {
                 })}`,
                 value: slot.start.toISOString(),
               })),
-              defaultValue: selectedSlot[0]?.start.toISOString(),
             },
             {
               name: "paymentMethod",
@@ -290,22 +255,12 @@ export default function PatientCalendar() {
               onChange: (value) => setPaymentMethod(value),
             },
             paymentMethod === "gcash" && {
-              name: "gcashQR",
               type: "custom",
-              component: (
-                <div style={{ textAlign: "center", margin: "20px 0" }}>
-                  <p>GCash: 0975 470 3971</p>
-                </div>
-              ),
+              component: <p>GCash: 0975 470 3971</p>,
             },
             paymentMethod === "paymaya" && {
-              name: "mayaQR",
               type: "custom",
-              component: (
-                <div style={{ textAlign: "center", margin: "20px 0" }}>
-                  <p>Paymaya: 0917 182 1861</p>
-                </div>
-              ),
+              component: <p>Paymaya: 0917 182 1861</p>,
             },
             (paymentMethod === "gcash" || paymentMethod === "paymaya") && {
               name: "receipt",
