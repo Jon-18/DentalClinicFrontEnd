@@ -7,11 +7,16 @@ export default function AdminAppointmentRequests() {
   const [reason, setReason] = useState("");
 
   // Fetch appointments
-  const fetchAppointments = () => {
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
-      .then((res) => res.json())
-      .then((data) => console.log(data) || setAppointments(data))
-      .catch((err) => console.error("Appointment fetch error:", err));
+  const fetchAppointments = async () => {
+    try {
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/appointments",
+      );
+      const data = await res.json();
+      setAppointments(data);
+    } catch (err) {
+      console.error("Appointment fetch error:", err);
+    }
   };
 
   useEffect(() => {
@@ -19,9 +24,9 @@ export default function AdminAppointmentRequests() {
   }, []);
 
   // Approve / Deny action
-  const updateStatus = async (id, status, reason) => {
+  const updateStatus = async (id, status, reason = "") => {
     try {
-      await fetch(
+      const res = await fetch(
         `https://dentalclinicbackend-1qfr.onrender.com/api/appointmentAdmin/${id}`,
         {
           method: "PUT",
@@ -30,7 +35,13 @@ export default function AdminAppointmentRequests() {
         },
       );
 
-      fetchAppointments(); // refresh table
+      if (!res.ok) throw new Error("Failed to update");
+
+      // 🔥 Instant UI update (removes from Pending list)
+      setAppointments((prev) => prev.filter((appt) => appt.id !== id));
+
+      // Optional: re-fetch to stay in sync with backend
+      await fetchAppointments();
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -65,9 +76,7 @@ export default function AdminAppointmentRequests() {
                 <td>{appt.fullName}</td>
                 <td>{appt.contactNumber}</td>
                 <td>{appt.email}</td>
-
                 <td>{appt.doctorName}</td>
-
                 <td>{appt.Date}</td>
                 <td>{appt.startTime}</td>
                 <td>{appt.endTime}</td>
@@ -76,7 +85,7 @@ export default function AdminAppointmentRequests() {
                 <td>
                   {appt.receiptPath ? (
                     <a
-                      href={`${appt.receiptPath}`}
+                      href={appt.receiptPath}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#0077cc" }}
@@ -139,6 +148,8 @@ export default function AdminAppointmentRequests() {
             ))}
         </tbody>
       </table>
+
+      {/* Modal */}
       {isModalOpen && (
         <div
           style={{
@@ -162,6 +173,7 @@ export default function AdminAppointmentRequests() {
             }}
           >
             <h3>Deny Appointment</h3>
+
             <textarea
               placeholder="Reason for denial"
               value={reason}
@@ -173,19 +185,21 @@ export default function AdminAppointmentRequests() {
                 padding: "10px 5px",
               }}
             />
+
             <div
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
                 gap: "10px",
-                border: "none",
-                borderRadius: "10px",
               }}
             >
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setReason("");
+                }}
                 style={{
-                  padding: "10px 10px",
+                  padding: "10px",
                   background: "red",
                   color: "white",
                   border: "none",
@@ -195,6 +209,7 @@ export default function AdminAppointmentRequests() {
               >
                 Cancel
               </button>
+
               <button
                 onClick={async () => {
                   await updateStatus(selectedApptId, "Denied by Admin", reason);
@@ -202,7 +217,7 @@ export default function AdminAppointmentRequests() {
                   setReason("");
                 }}
                 style={{
-                  padding: "10px 10px",
+                  padding: "10px",
                   background: "blue",
                   color: "#fff",
                   border: "none",
