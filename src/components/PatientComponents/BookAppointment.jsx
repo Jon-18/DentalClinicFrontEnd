@@ -17,7 +17,7 @@ export default function PatientCalendar() {
   minSelectableDate.setHours(0, 0, 0, 0);
 
   const selectedService = services.find(
-    (s) => s.service_id === Number(selectedServiceId),
+    (s) => s.service_id === selectedServiceId,
   );
 
   const user = JSON.parse(localStorage.getItem("user"));
