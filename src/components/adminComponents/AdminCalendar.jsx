@@ -21,7 +21,7 @@ export default function AdminCalendar() {
 
   const [selectedServiceId, setSelectedServiceId] = useState(null);
 
-  const locales = { "en-US": require("date-fns/locale/en-US") };
+  // const locales = { "en-US": require("date-fns/locale/en-US") };
 
   // const localizer = dateFnsLocalizer({
   //   format,
