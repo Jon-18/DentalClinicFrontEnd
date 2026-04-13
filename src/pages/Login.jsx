@@ -35,7 +35,7 @@ const Login = () => {
 
     try {
       const res = await fetch(
-        "http://localhost:5000" + endpoint,
+        "https://dentalclinicbackend-1qfr.onrender.com/" + endpoint,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
