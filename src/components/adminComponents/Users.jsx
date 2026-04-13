@@ -18,7 +18,9 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users");
+        const response = await fetch(
+          "https://dentalclinicbackend-1qfr.onrender.com/api/users",
+        );
         const users = await response.json();
         setData(users);
       } catch (error) {
@@ -39,11 +41,7 @@ const Users = () => {
 
   return (
     <div style={{ width: "90%", margin: "0 auto" }}>
-      <Table
-        title="User Accounts"
-        columns={columns}
-        data={currentUsers}
-      />
+      <Table title="User Accounts" columns={columns} data={currentUsers} />
 
       {/* 🔢 Pagination */}
       <div style={{ textAlign: "center", marginTop: "20px" }}>

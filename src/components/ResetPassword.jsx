@@ -30,11 +30,14 @@ function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, newPassword: password }),
-      });
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, newPassword: password }),
+        },
+      );
 
       const data = await res.json();
 

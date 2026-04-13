@@ -15,7 +15,6 @@ const DentistRegistration = () => {
     "License No.",
     "Address",
   ];
-  
 
   const rowTemplate = {
     name: { value: "", type: "text" },
@@ -64,7 +63,7 @@ const DentistRegistration = () => {
     const fetchDentists = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/dentists",
+          "https://dentalclinicbackend-1qfr.onrender.com/api/dentists",
         );
         const data = await response.json();
         setDentists(data);
@@ -78,46 +77,46 @@ const DentistRegistration = () => {
 
   // ✅ Handle form submission
   const handleSubmit = async (dentist, isEdit = false, id = null) => {
-  try {
-    const url = isEdit
-      ? `http://localhost:5000/api/dentists/${id}`
-      : "http://localhost:5000/api/dentists";
+    try {
+      const url = isEdit
+        ? `https://dentalclinicbackend-1qfr.onrender.com/api/dentists/${id}`
+        : "https://dentalclinicbackend-1qfr.onrender.com/api/dentists";
 
-    const method = isEdit ? "PUT" : "POST";
+      const method = isEdit ? "PUT" : "POST";
 
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dentist),
-    });
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dentist),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      if (!isEdit) {
-        setDentists((prev) => [...prev, { ...dentist, id: data.id }]);
+      if (res.ok) {
+        if (!isEdit) {
+          setDentists((prev) => [...prev, { ...dentist, id: data.id }]);
+        } else {
+          setDentists((prev) =>
+            prev.map((d) => (d.id === id ? { ...dentist, id } : d)),
+          );
+        }
+
+        return { success: true };
       } else {
-        setDentists((prev) =>
-          prev.map((d) => (d.id === id ? { ...dentist, id } : d))
-        );
+        return { success: false, message: data.message };
       }
-
-      return { success: true };
-    } else {
-      return { success: false, message: data.message };
+    } catch {
+      return { success: false, message: "Server error" };
     }
-  } catch {
-    return { success: false, message: "Server error" };
-  }
-};
+  };
 
   const handleDeleteDentist = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/dentists/${id}`,
+        `https://dentalclinicbackend-1qfr.onrender.com/api/dentists/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await res.json();
@@ -149,7 +148,7 @@ const DentistRegistration = () => {
         setData={setDentists}
         rowTemplate={rowTemplate}
         onSave={handleSubmit}
-         onDelete={handleDeleteDentist}
+        onDelete={handleDeleteDentist}
       />
     </div>
   );

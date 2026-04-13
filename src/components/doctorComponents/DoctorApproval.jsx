@@ -6,7 +6,7 @@ export default function AdminAppointmentRequests() {
 
   // Fetch doctors
   useEffect(() => {
-    fetch("http://localhost:5000/api/getAllDoctor")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllDoctor")
       .then((res) => res.json())
       .then((data) => setDoctors(data))
       .catch((err) => console.error("Doctor fetch error:", err));
@@ -14,7 +14,7 @@ export default function AdminAppointmentRequests() {
 
   // Fetch appointments
   const fetchAppointments = () => {
-    fetch("http://localhost:5000/api/appointments")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
       .then((res) => res.json())
       .then((data) => console.log(data) || setAppointments(data))
       .catch((err) => console.error("Appointment fetch error:", err));
@@ -27,11 +27,14 @@ export default function AdminAppointmentRequests() {
   // Approve / Deny action
   const updateStatus = async (id, status) => {
     try {
-      await fetch(`http://localhost:5000/api/appointmentDoctor/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
+      await fetch(
+        `https://dentalclinicbackend-1qfr.onrender.com/api/appointmentDoctor/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        },
+      );
 
       fetchAppointments(); // refresh table
     } catch (error) {
@@ -63,76 +66,76 @@ export default function AdminAppointmentRequests() {
           {appointments
             .filter((appt) => appt.status === "Approved by Admin")
             .map((appt) => (
-            <tr key={appt.id}>
-              <td>{appt.fullName}</td>
-              <td>{appt.contactNumber}</td>
-              <td>{appt.email}</td>
+              <tr key={appt.id}>
+                <td>{appt.fullName}</td>
+                <td>{appt.contactNumber}</td>
+                <td>{appt.email}</td>
 
-              <td>
-                {appt.doctor ||
-                  doctors.find((d) => d.id === appt.doctorId)?.name ||
-                  "N/A"}
-              </td>
+                <td>
+                  {appt.doctor ||
+                    doctors.find((d) => d.id === appt.doctorId)?.name ||
+                    "N/A"}
+                </td>
 
-              <td>{appt.date}</td>
-              <td>{appt.time}</td>
+                <td>{appt.date}</td>
+                <td>{appt.time}</td>
 
-              <td>{appt.paymentMethod}</td>
+                <td>{appt.paymentMethod}</td>
 
-              <td>
-                {appt.receipt ? (
-                  <a
-                    href={`http://localhost:5000/api/getAllPatient${appt.receiptPath}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "#0077cc" }}
+                <td>
+                  {appt.receipt ? (
+                    <a
+                      href={`https://dentalclinicbackend-1qfr.onrender.com/api/getAllPatient${appt.receiptPath}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#0077cc" }}
+                    >
+                      View
+                    </a>
+                  ) : (
+                    "None"
+                  )}
+                </td>
+
+                <td style={{ fontWeight: "bold" }}>{appt.status}</td>
+
+                <td>
+                  <button
+                    onClick={() => updateStatus(appt.id, "Approved by Doctor")}
+                    style={{
+                      background: "#4caf50",
+                      color: "#fff",
+                      border: "none",
+                      padding: "5px 10px",
+                      marginRight: "5px",
+                      marginBottom: "5px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    }}
                   >
-                    View
-                  </a>
-                ) : (
-                  "None"
-                )}
-              </td>
+                    Approve
+                  </button>
 
-              <td style={{ fontWeight: "bold" }}>{appt.status}</td>
-
-              <td>
-                <button
-                  onClick={() => updateStatus(appt.id, "Approved by Doctor")}
-                  style={{
-                    background: "#4caf50",
-                    color: "#fff",
-                    border: "none",
-                    padding: "5px 10px",
-                    marginRight: "5px",
-                    marginBottom: "5px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                    fontWeight: "bold"
-                  }}
-                >
-                  Approve
-                </button>
-
-                <button
-                  onClick={() => updateStatus(appt.id, "Denied by Doctor")}
-                  style={{
-                    background: "#e53935",
-                    color: "#fff",
-                    border: "none",
-                    padding: "5px 10px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                    fontWeight: "bold"
-                  }}
-                >
-                  Deny
-                </button>
-              </td>
-            </tr>
-          ))}
+                  <button
+                    onClick={() => updateStatus(appt.id, "Denied by Doctor")}
+                    style={{
+                      background: "#e53935",
+                      color: "#fff",
+                      border: "none",
+                      padding: "5px 10px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Deny
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -8,7 +8,7 @@ export default function AdminAppointmentRequests() {
 
   // Fetch appointments
   const fetchAppointments = () => {
-    fetch("http://localhost:5000/api/appointments")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
       .then((res) => res.json())
       .then((data) => console.log(data) || setAppointments(data))
       .catch((err) => console.error("Appointment fetch error:", err));
@@ -21,11 +21,14 @@ export default function AdminAppointmentRequests() {
   // Approve / Deny action
   const updateStatus = async (id, status, reason) => {
     try {
-      await fetch(`http://localhost:5000/api/appointmentAdmin/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, reason }),
-      });
+      await fetch(
+        `https://dentalclinicbackend-1qfr.onrender.com/api/appointmentAdmin/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status, reason }),
+        },
+      );
 
       fetchAppointments(); // refresh table
     } catch (error) {

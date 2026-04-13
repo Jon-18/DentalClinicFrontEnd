@@ -55,47 +55,49 @@ export default function CalendarBaseForPatient({
 
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,
-      "0"
+      "0",
     )}:00`;
   };
 
   // ✅ FETCH APPOINTMENTS (FIXED)
-useEffect(() => {
-  if (!userId) return;
+  useEffect(() => {
+    if (!userId) return;
 
-  fetch(`http://localhost:5000/api/getAllAppointmentsRoutesPerPatient/${userId}`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("API response:", data);
+    fetch(
+      `https://dentalclinicbackend-1qfr.onrender.com/api/getAllAppointmentsRoutesPerPatient/${userId}`,
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("API response:", data);
 
-      // Make sure we have an array
-      const rows = Array.isArray(data) ? data : [data];
+        // Make sure we have an array
+        const rows = Array.isArray(data) ? data : [data];
 
-      const formattedRows = rows.map((row) => {
-        const [startHour, startMinute] = convertToTime24(row.startTime)
-          .split(":")
-          .map(Number);
+        const formattedRows = rows.map((row) => {
+          const [startHour, startMinute] = convertToTime24(row.startTime)
+            .split(":")
+            .map(Number);
 
-        const [endHour, endMinute] = convertToTime24(row.endTime)
-          .split(":")
-          .map(Number);
+          const [endHour, endMinute] = convertToTime24(row.endTime)
+            .split(":")
+            .map(Number);
 
-        const formatStartTime = new Date(row.appointmentDate);
-        formatStartTime.setHours(startHour, startMinute, 0, 0);
+          const formatStartTime = new Date(row.appointmentDate);
+          formatStartTime.setHours(startHour, startMinute, 0, 0);
 
-        const formatEndTime = new Date(row.appointmentDate);
-        formatEndTime.setHours(endHour, endMinute, 0, 0);
+          const formatEndTime = new Date(row.appointmentDate);
+          formatEndTime.setHours(endHour, endMinute, 0, 0);
 
-        return { ...row, formatStartTime, formatEndTime };
+          return { ...row, formatStartTime, formatEndTime };
+        });
+
+        setAppointments(formattedRows);
+      })
+      .catch((err) => {
+        console.error("Error fetching appointments:", err);
+        setAppointments([]);
       });
-
-      setAppointments(formattedRows);
-    })
-    .catch((err) => {
-      console.error("Error fetching appointments:", err);
-      setAppointments([]);
-    });
-}, [userId]);
+  }, [userId]);
 
   // ✅ Navigation
   const handleNavigate = useCallback((date) => {
@@ -140,7 +142,7 @@ useEffect(() => {
 
       return slots;
     },
-    [appointments]
+    [appointments],
   );
 
   // ✅ Events
@@ -153,7 +155,7 @@ useEffect(() => {
         end: appt.formatEndTime,
         color: role === "admin" ? "#ff4d4f" : "#1890ff",
       })),
-    [appointments, role]
+    [appointments, role],
   );
 
   // ✅ Slot click with 1-day rule
@@ -172,7 +174,7 @@ useEffect(() => {
 
       onSlotSelect?.(slot, generateSlots);
     },
-    [selectable, onSlotSelect, generateSlots]
+    [selectable, onSlotSelect, generateSlots],
   );
 
   return (

@@ -13,7 +13,6 @@ const RegisterPatient = () => {
     "Email",
     "Cellphone No.",
     "address",
-    
   ];
 
   const [search] = useState("");
@@ -61,7 +60,7 @@ const RegisterPatient = () => {
     const fetchPatients = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/patients",
+          "https://dentalclinicbackend-1qfr.onrender.com/api/patients",
         );
         const data = await res.json();
         setPatients(data);
@@ -85,7 +84,7 @@ const RegisterPatient = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/patients",
+        "https://dentalclinicbackend-1qfr.onrender.com/api/patients",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -116,17 +115,16 @@ const RegisterPatient = () => {
   };
 
   const filteredPatients = patients.filter((appt) =>
-    appt.fullName?.toLowerCase().includes(search.toLowerCase())
+    appt.fullName?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const handleDeletePatient = async (id) => {
-    
     try {
       const res = await fetch(
-        `http://localhost:5000/api/patients/${id}`,
+        `https://dentalclinicbackend-1qfr.onrender.com/api/patients/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await res.json();
@@ -141,7 +139,6 @@ const RegisterPatient = () => {
       setError("Server error");
     }
   };
-  
 
   return (
     <div>
@@ -160,7 +157,7 @@ const RegisterPatient = () => {
         rowTemplate={rowTemplate}
         onDelete={handleDeletePatient}
         onSave={handleSubmit}
-        searchable = {true}
+        searchable={true}
       />
     </div>
   );

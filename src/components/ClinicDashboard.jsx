@@ -29,7 +29,7 @@ export default function ClinicDashboard() {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:5000/api/getDataInDashboard/dashboard?filter=${filter}`,
+        `https://dentalclinicbackend-1qfr.onrender.com/api/getDataInDashboard/dashboard?filter=${filter}`,
       );
       const jsonData = await res.json();
 
@@ -51,7 +51,9 @@ export default function ClinicDashboard() {
   // ✅ Fetch dentists
   const fetchAllDoctor = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/dentists");
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/dentists",
+      );
       const jsonData = await res.json();
       setDentistCount(jsonData.length);
     } catch (err) {
@@ -66,7 +68,9 @@ export default function ClinicDashboard() {
   // ✅ Fetch patients
   const fetchAllPatients = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/patients");
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/patients",
+      );
       const jsonData = await res.json();
       setPatientsCount(jsonData.length);
     } catch (err) {
@@ -81,7 +85,9 @@ export default function ClinicDashboard() {
   // ✅ Fetch appointments + pending count
   const fetchAllAppointment = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/appointments");
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/appointments",
+      );
       const jsonData = await res.json();
 
       setAppointmentCount(jsonData.length);

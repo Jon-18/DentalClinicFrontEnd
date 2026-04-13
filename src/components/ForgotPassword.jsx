@@ -14,11 +14,14 @@ function ForgotPassword() {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+      );
 
       const data = await res.json();
       setMessage(data.message || "⚠️ Something went wrong.");
@@ -47,7 +50,9 @@ function ForgotPassword() {
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
-        {message && <p className={message.includes("✅") ? "success" : ""}>{message}</p>}
+        {message && (
+          <p className={message.includes("✅") ? "success" : ""}>{message}</p>
+        )}
       </div>
       <Footer />
     </>

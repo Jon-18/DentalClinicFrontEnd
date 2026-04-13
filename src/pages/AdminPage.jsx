@@ -12,15 +12,18 @@ import ClinicDashboard from "../components/ClinicDashboard.jsx";
 
 import { useState } from "react";
 
-const AdminPage = () =>{
-    const navigate = useNavigate();
+const AdminPage = () => {
+  const navigate = useNavigate();
 
-    const logout = async () => {
+  const logout = async () => {
     try {
-      await fetch("http://localhost:5000/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/auth/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
@@ -49,11 +52,11 @@ const AdminPage = () =>{
   const renderContent = () => {
     switch (activePage) {
       case "clinic-dashboard":
-        return <ClinicDashboard />
+        return <ClinicDashboard />;
       case "create-doctor":
         return <DentistRegistration />;
       case "register-patient":
-        return <RegisterPatient />
+        return <RegisterPatient />;
       case "add-clinic":
         return <AddClinicServices />;
       case "add-schedule":
@@ -72,23 +75,21 @@ const AdminPage = () =>{
         <AdminApproval />;
     }
   };
-  
+
   return (
     <>
       <div>
         <div className="dashboard-layout">
-          <Sidebar 
-            title="Admin Panel" 
+          <Sidebar
+            title="Admin Panel"
             links={adminLinks}
-            onLinkClick={(key) => setActivePage(key)} 
+            onLinkClick={(key) => setActivePage(key)}
           />
-          <main className="dashboard-content">
-            {renderContent()}
-          </main>
+          <main className="dashboard-content">{renderContent()}</main>
         </div>
       </div>
     </>
-  )
-}
-  
+  );
+};
+
 export default AdminPage;

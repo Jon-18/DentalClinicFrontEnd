@@ -26,7 +26,7 @@ export default function PatientCalendar() {
 
   useEffect(() => {
     if (showFormModal) {
-      fetch("http://localhost:5000/api/getAllServices")
+      fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllServices")
         .then((res) => res.json())
         .then((data) => setServices(data))
         .catch((err) => console.error(err));
@@ -36,7 +36,7 @@ export default function PatientCalendar() {
   // Fetch doctors when modal opens
   useEffect(() => {
     if (showFormModal) {
-      fetch("http://localhost:5000/api/getAllDoctor")
+      fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllDoctor")
         .then((res) => res.json())
         .then((data) => setDoctors(data))
         .catch((err) => console.error(err));
@@ -109,7 +109,7 @@ export default function PatientCalendar() {
       // ✅ CASH FLOW
       if (paymentMethod === "cash") {
         response = await fetch(
-          "http://localhost:5000/api/appointments/create",
+          "https://dentalclinicbackend-1qfr.onrender.com/api/appointments/create",
           {
             method: "POST",
             headers: {
@@ -131,7 +131,7 @@ export default function PatientCalendar() {
         uploadData.append("data", JSON.stringify(finalAppointment));
 
         response = await fetch(
-          "http://localhost:5000/api/appointments/create",
+          "https://dentalclinicbackend-1qfr.onrender.com/api/appointments/create",
           {
             method: "POST",
             body: uploadData,

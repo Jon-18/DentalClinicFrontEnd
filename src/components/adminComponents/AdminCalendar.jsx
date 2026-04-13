@@ -34,15 +34,15 @@ export default function AdminCalendar() {
   /* LOAD DATA */
   useEffect(() => {
     if (showFormModal) {
-      fetch("http://localhost:5000/api/getAllPatient")
+      fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllPatient")
         .then((res) => res.json())
         .then(setPatient);
 
-      fetch("http://localhost:5000/api/getAllDoctor")
+      fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllDoctor")
         .then((res) => res.json())
         .then(setDoctors);
 
-      fetch("http://localhost:5000/api/getAllServices")
+      fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllServices")
         .then((res) => res.json())
         .then(setServices);
     }
@@ -102,7 +102,7 @@ export default function AdminCalendar() {
     };
     console.log(finalAppointment);
     try {
-      // const res = await fetch("http://localhost:5000/api/getAllPatient", {
+      // const res = await fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllPatient", {
       //   method: "POST",
       //   headers: {
       //     "Content-Type": "application/json",

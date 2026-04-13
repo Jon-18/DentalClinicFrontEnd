@@ -16,7 +16,7 @@ export default function PatientProfile() {
     const fetchProfile = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/profile/${userId}`,
+          `https://dentalclinicbackend-1qfr.onrender.com/api/profile/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ export default function PatientProfile() {
   const handleSave = async (updatedData) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/profile/${userId}`,
+        `https://dentalclinicbackend-1qfr.onrender.com/api/profile/${userId}`,
         {
           method: "PUT",
           headers: {

@@ -59,7 +59,9 @@ export default function CalendarBase({
 
   // Fetch appointments
   useEffect(() => {
-    fetch("http://localhost:5000/api/getAllAppointmentsRoutes")
+    fetch(
+      "https://dentalclinicbackend-1qfr.onrender.com/api/getAllAppointmentsRoutes",
+    )
       .then((res) => res.json())
       .then((data) => {
         const formattedRows = data.map((row) => {
@@ -83,21 +85,17 @@ export default function CalendarBase({
       .catch((err) => console.error("Error fetching appointments:", err));
   }, []);
 
-
   // Calendar navigation handler
-  const handleNavigate = useCallback(
-    (date, newView) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+  const handleNavigate = useCallback((date, newView) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-      if (isBefore(date, today)) {
-        date = today;
-      }
+    if (isBefore(date, today)) {
+      date = today;
+    }
 
-      setSelectedDate(date);
-    },
-    []
-  );
+    setSelectedDate(date);
+  }, []);
 
   const handleViewChange = (newView) => setView(newView);
 
@@ -128,7 +126,7 @@ export default function CalendarBase({
 
       return slots;
     },
-    [appointments]
+    [appointments],
   );
 
   const calendarEvents = useMemo(
@@ -140,7 +138,7 @@ export default function CalendarBase({
         end: appt.formatEndTime,
         color: role === "admin" ? "#ff4d4f" : "#1890ff",
       })),
-    [appointments, role]
+    [appointments, role],
   );
 
   // Slot selection handler with 1-day advance check
@@ -159,7 +157,7 @@ export default function CalendarBase({
 
       onSlotSelect?.(slot, generateSlots);
     },
-    [selectable, onSlotSelect, generateSlots]
+    [selectable, onSlotSelect, generateSlots],
   );
 
   return (

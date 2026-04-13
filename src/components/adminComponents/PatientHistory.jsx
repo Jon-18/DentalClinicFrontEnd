@@ -17,7 +17,7 @@ const PatientHistory = () => {
   const itemsPerPage = 10;
 
   const fetchAppointments = () => {
-    fetch("http://localhost:5000/api/appointments")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
       .then((res) => res.json())
       .then((data) => setAppointments(data))
       .catch((err) => console.error("Appointment fetch error:", err));
@@ -29,7 +29,7 @@ const PatientHistory = () => {
 
   // 🔍 Filter
   const filteredAppointments = appointments.filter((appt) =>
-    appt.fullName?.toLowerCase().includes(search.toLowerCase())
+    appt.fullName?.toLowerCase().includes(search.toLowerCase()),
   );
 
   // 📄 Pagination logic
@@ -38,7 +38,7 @@ const PatientHistory = () => {
 
   const currentAppointments = filteredAppointments.slice(
     indexOfFirst,
-    indexOfLast
+    indexOfLast,
   );
 
   // 💰 Total (ONLY current page)

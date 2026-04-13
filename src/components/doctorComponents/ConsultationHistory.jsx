@@ -15,7 +15,7 @@ const ConsultationHistory = () => {
 
   // Fetch appointments
   const fetchAppointments = () => {
-    fetch("http://localhost:5000/api/appointments")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
       .then((res) => res.json())
       .then((data) => setAppointments(data))
       .catch((err) => console.error("Appointment fetch error:", err));
@@ -27,12 +27,11 @@ const ConsultationHistory = () => {
 
   // Filter by patient name
   const filteredAppointments = appointments.filter((appt) =>
-    appt.fullName?.toLowerCase().includes(search.toLowerCase())
+    appt.fullName?.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div style={{ width: "90%", margin: "0 auto" }}>
-
       <Table
         title="Patient History"
         columns={columns}

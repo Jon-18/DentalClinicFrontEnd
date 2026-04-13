@@ -11,10 +11,13 @@ const PatientPage = () => {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:5000/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/auth/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
