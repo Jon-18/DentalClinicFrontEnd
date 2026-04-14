@@ -112,12 +112,14 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <span
-              className="password-toggle-icon-login"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
-            </span>
+            {!isSignup && (
+              <span
+                className="password-toggle-icon-login"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+              </span>
+            )}
 
             {isSignup && (
               <>
@@ -130,6 +132,13 @@ const Login = () => {
                 />
                 <span
                   className="password-toggle-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                </span>
+
+                <span
+                  className="password-toggle-icon-copy"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
