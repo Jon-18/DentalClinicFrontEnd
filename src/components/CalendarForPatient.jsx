@@ -150,7 +150,7 @@ export default function CalendarBaseForPatient({
     () =>
       appointments.map((appt, i) => ({
         id: `appt-${i}`,
-        title: `${appt.fullName} (${appt.services})`,
+        title: `${appt.fullName} (${appt.notes})`,
         start: appt.formatStartTime,
         end: appt.formatEndTime,
         color: role === "admin" ? "#ff4d4f" : "#1890ff",
