@@ -1,66 +1,123 @@
 import { useEffect, useState } from "react";
 import Table from "../Table";
 
-const ConsultationHistory = () => {
+const PatientHistory = () => {
   const columns = [
     { key: "appointmentDate", header: "Date" },
     { key: "fullName", header: "Patient Name" },
-    { key: "serviceName", header: "Services" },
+    { key: "service_name", header: "Services" },
     { key: "doctorName", header: "Dentist" },
     { key: "notes", header: "Notes" },
   ];
 
   const [appointments, setAppointments] = useState([]);
-  const [services, setServices] = useState([]);
   const [search] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch appointments
-  const fetchAppointments = () => {
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
+  const itemsPerPage = 10;
+
+  const fetchAppointmentsHistory = () => {
+    fetch(
+      "https://dentalclinicbackend-1qfr.onrender.com/api/getAppointmentHistory",
+    )
       .then((res) => res.json())
       .then((data) => setAppointments(data))
       .catch((err) => console.error("Appointment fetch error:", err));
   };
 
-  // Fetch Services
-  const fetchServices = () => {
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/services")
-      .then((res) => res.json())
-      .then((data) => setServices(data))
-      .catch((err) => console.error("Appointment fetch error:", err));
-  };
-
   useEffect(() => {
-    fetchAppointments();
+    fetchAppointmentsHistory();
   }, []);
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  // Filter by patient name
+  // 🔍 Filter
   const filteredAppointments = appointments.filter((appt) =>
     appt.fullName?.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const mappedAppointments = filteredAppointments.map((appt) => {
-    const service = services.find((s) => s.id === appt.service_id);
+  // 📄 Pagination logic
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
 
-    return {
-      ...appt,
-      serviceName: service ? service.name : "Unknown Service",
-    };
-  });
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirst,
+    indexOfLast,
+  );
+
+  // 💰 Total (ONLY current page)
+  const total = currentAppointments.reduce((sum, appt) => {
+    return sum + parseInt(appt.Price || 0, 10);
+  }, 0);
+
+  // 📊 Total number of pages
+  const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
 
   return (
     <div style={{ width: "90%", margin: "0 auto" }}>
       <Table
         title="Patient History"
         columns={columns}
-        data={mappedAppointments}
+        data={currentAppointments}
       />
+
+      {/* 💰 Total */}
+      <div
+        style={{
+          width: "90%",
+          margin: "20px auto",
+          fontWeight: "bold",
+          fontSize: "25px",
+        }}
+      >
+        Total: ₱{total}
+      </div>
+
+      {/* 🔢 Pagination Buttons */}
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        {/* Prev */}
+        <button
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+          disabled={currentPage === 1}
+          style={{
+            margin: "5px",
+            padding: "8px 12px",
+            cursor: currentPage === 1 ? "not-allowed" : "pointer",
+          }}
+        >
+          Prev
+        </button>
+
+        {/* Page Numbers */}
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)}
+            style={{
+              margin: "5px",
+              padding: "8px 12px",
+              background: currentPage === i + 1 ? "#333" : "#ccc",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        {/* Next */}
+        <button
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          disabled={currentPage === totalPages}
+          style={{
+            margin: "5px",
+            padding: "8px 12px",
+            cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+          }}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
 
-export default ConsultationHistory;
+export default PatientHistory;

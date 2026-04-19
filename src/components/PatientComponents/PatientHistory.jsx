@@ -1,40 +1,41 @@
-import { useEffect, useState } from "react";
 import Table from "../Table";
+import { useEffect, useState } from "react";
 
 const Users = () => {
-  const columns = [
-    { key: "dateService", header: "Date" },
-    { key: "fullname", header: "Full Name" },
-    { key: "username", header: "Username" },
-    { key: "service_id", header: "Service" },
-    { key: "phoneNumber", header: "Phone Number" },
-  ];
+  const [appointments, setAppointments] = useState([]);
 
-  const [users, setUsers] = useState([]);
-  const [services, setServices] = useState([]);
+  const columns = [
+    { key: "createdAt", header: "Date" },
+    { key: "fullName", header: "Full Name" },
+    { key: "email", header: "Username" },
+    { key: "service_name", header: "Service" },
+    { key: "contactNumber", header: "Phone Number" },
+  ];
+  const fetchAppointmentsHistory = async (user_id) => {
+    try {
+      const res = await fetch(
+        `https://dentalclinicbackend-1qfr.onrender.com/api/patientHistoryId?user_id=${user_id}`,
+      );
+      const data = await res.json();
+      console.log(data);
+
+      setAppointments(data);
+    } catch (err) {
+      console.error("Appointment fetch error:", err);
+    }
+  };
 
   useEffect(() => {
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/services")
-      .then((res) => res.json())
-      .then((data) => setServices(data));
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user.id);
+    if (user?.id) {
+      fetchAppointmentsHistory(user.id);
+    }
   }, []);
-
-  // ✅ create service map
-  const serviceMap = Object.fromEntries(services.map((s) => [s.id, s.name]));
-
-  // ✅ map users with service name
-  const mappedData = users.map((user) => ({
-    ...user,
-    serviceName: serviceMap[user.service_id] || "Unknown Service",
-  }));
 
   return (
     <div>
-      <Table title="Your History" columns={columns} data={mappedData} />
+      <Table title="Your History" columns={columns} data={appointments} />
     </div>
   );
 };

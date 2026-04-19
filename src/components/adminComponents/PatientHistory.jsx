@@ -5,49 +5,29 @@ const PatientHistory = () => {
   const columns = [
     { key: "appointmentDate", header: "Date" },
     { key: "fullName", header: "Patient Name" },
-    { key: "service_id", header: "Services" },
+    { key: "service_name", header: "Services" },
     { key: "doctorName", header: "Dentist" },
     { key: "notes", header: "Notes" },
   ];
 
   const [appointments, setAppointments] = useState([]);
   const [search] = useState("");
-  const [services, setServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 10;
 
-  const fetchAppointments = () => {
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/appointments")
+  const fetchAppointmentsHistory = () => {
+    fetch(
+      "https://dentalclinicbackend-1qfr.onrender.com/api/getAppointmentHistory",
+    )
       .then((res) => res.json())
       .then((data) => setAppointments(data))
       .catch((err) => console.error("Appointment fetch error:", err));
   };
 
   useEffect(() => {
-    fetchAppointments();
+    fetchAppointmentsHistory();
   }, []);
-
-  // Fetch Services
-  const fetchServices = () => {
-    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/services")
-      .then((res) => res.json())
-      .then((data) => setServices(data))
-      .catch((err) => console.error("Appointment fetch error:", err));
-  };
-
-  const serviceMap = services.reduce((map, service) => {
-    console.log(map);
-    map[service.service_id] = service.id;
-    return map;
-  }, {});
-
-  console.log(serviceMap);
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
   // 🔍 Filter
   const filteredAppointments = appointments.filter((appt) =>
     appt.fullName?.toLowerCase().includes(search.toLowerCase()),
@@ -57,14 +37,10 @@ const PatientHistory = () => {
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
 
-  const currentAppointments = filteredAppointments
-    .slice(indexOfFirst, indexOfLast)
-    .map((appt) => ({
-      ...appt,
-      service_id: serviceMap[appt.service_id] || "Unknown Service",
-    }));
-
-  console.log(currentAppointments);
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirst,
+    indexOfLast,
+  );
 
   // 💰 Total (ONLY current page)
   const total = currentAppointments.reduce((sum, appt) => {
@@ -73,6 +49,7 @@ const PatientHistory = () => {
 
   // 📊 Total number of pages
   const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+
   return (
     <div style={{ width: "90%", margin: "0 auto" }}>
       <Table
