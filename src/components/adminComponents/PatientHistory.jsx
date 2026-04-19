@@ -37,7 +37,7 @@ const PatientHistory = () => {
   };
 
   const serviceMap = services.reduce((map, service) => {
-    map[service._id] = service.id;
+    map[service.service_id] = service.id;
     return map;
   }, {});
 
@@ -53,11 +53,6 @@ const PatientHistory = () => {
   // 📄 Pagination logic
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-
-  // const currentAppointments = filteredAppointments.slice(
-  //   indexOfFirst,
-  //   indexOfLast,
-  // );
 
   const currentAppointments = filteredAppointments
     .slice(indexOfFirst, indexOfLast)
