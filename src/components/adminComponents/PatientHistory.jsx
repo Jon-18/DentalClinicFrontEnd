@@ -38,7 +38,7 @@ const PatientHistory = () => {
 
   const serviceMap = services.reduce((map, service) => {
     map[service.service_id] = service.id;
-    return map;
+    return map.service_name;
   }, {});
 
   useEffect(() => {
