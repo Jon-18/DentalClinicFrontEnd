@@ -37,6 +37,7 @@ const PatientHistory = () => {
   };
 
   const serviceMap = services.reduce((map, service) => {
+    console.log(map);
     map[service.service_id] = service.id;
     return map;
   }, {});
