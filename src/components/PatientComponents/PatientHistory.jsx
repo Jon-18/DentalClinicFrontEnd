@@ -14,11 +14,11 @@ const Users = () => {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    fetch("/api/users")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/users")
       .then((res) => res.json())
       .then((data) => setUsers(data));
 
-    fetch("/api/services")
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/services")
       .then((res) => res.json())
       .then((data) => setServices(data));
   }, []);
