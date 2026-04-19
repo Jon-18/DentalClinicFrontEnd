@@ -6,7 +6,7 @@ const Users = () => {
     { key: "dateService", header: "Date" },
     { key: "fullname", header: "Full Name" },
     { key: "username", header: "Username" },
-    { key: "serviceName", header: "Service" }, // ✅ use serviceName
+    { key: "service_id", header: "Service" },
     { key: "phoneNumber", header: "Phone Number" },
   ];
 
