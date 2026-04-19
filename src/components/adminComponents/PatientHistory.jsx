@@ -64,6 +64,8 @@ const PatientHistory = () => {
       service_id: serviceMap[appt.service_id] || "Unknown Service",
     }));
 
+  console.log(currentAppointments);
+
   // 💰 Total (ONLY current page)
   const total = currentAppointments.reduce((sum, appt) => {
     return sum + parseInt(appt.Price || 0, 10);
