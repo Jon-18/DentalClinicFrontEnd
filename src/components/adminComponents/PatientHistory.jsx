@@ -12,7 +12,7 @@ const PatientHistory = () => {
 
   const [appointments, setAppointments] = useState([]);
   const [search] = useState("");
-  // const [services, setServices] = useState([]);
+  const [services, setServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 10;
@@ -29,21 +29,21 @@ const PatientHistory = () => {
   }, []);
 
   // Fetch Services
-  // const fetchServices = () => {
-  //   fetch("https://dentalclinicbackend-1qfr.onrender.com/api/services")
-  //     .then((res) => res.json())
-  //     .then((data) => setServices(data))
-  //     .catch((err) => console.error("Appointment fetch error:", err));
-  // };
+  const fetchServices = () => {
+    fetch("https://dentalclinicbackend-1qfr.onrender.com/api/services")
+      .then((res) => res.json())
+      .then((data) => setServices(data))
+      .catch((err) => console.error("Appointment fetch error:", err));
+  };
 
-  // const serviceMap = services.reduce((map, service) => {
-  //   map[service._id] = service.name;
-  //   return map;
-  // }, {});
+  const serviceMap = services.reduce((map, service) => {
+    map[service._id] = service.id;
+    return map;
+  }, {});
 
-  // useEffect(() => {
-  //   fetchServices();
-  // }, []);
+  useEffect(() => {
+    fetchServices();
+  }, []);
 
   // 🔍 Filter
   const filteredAppointments = appointments.filter((appt) =>
@@ -54,10 +54,17 @@ const PatientHistory = () => {
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
 
-  const currentAppointments = filteredAppointments.slice(
-    indexOfFirst,
-    indexOfLast,
-  );
+  // const currentAppointments = filteredAppointments.slice(
+  //   indexOfFirst,
+  //   indexOfLast,
+  // );
+
+  const currentAppointments = filteredAppointments
+    .slice(indexOfFirst, indexOfLast)
+    .map((appt) => ({
+      ...appt,
+      service_id: serviceMap[appt.service_id] || "Unknown Service",
+    }));
 
   // 💰 Total (ONLY current page)
   const total = currentAppointments.reduce((sum, appt) => {
