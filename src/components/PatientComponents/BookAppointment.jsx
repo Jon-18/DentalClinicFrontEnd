@@ -3,20 +3,58 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CalendarBaseForPatient from "../CalendarForPatient";
 import ModalForm from "../ModalForm";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+function PayPalButton({ amount, onSuccess }) {
+  return (
+    <PayPalScriptProvider
+      options={{
+        "client-id":
+          "Aat6nCbZB_atUx-8gQO5MYO2EDu_2-qeA384x7SaX8mianZeA_-vwVtOzZihXbmEcOodR-vg9QxSb5Z0",
+        currency: "PHP",
+      }}
+    >
+      <PayPalButtons
+        style={{ layout: "vertical" }}
+        createOrder={(data, actions) => {
+          return actions.order.create({
+            purchase_units: [
+              {
+                amount: {
+                  currency_code: "PHP",
+                  value: amount,
+                },
+              },
+            ],
+          });
+        }}
+        onApprove={(data, actions) => {
+          return actions.order.capture().then((details) => {
+            onSuccess(details);
+          });
+        }}
+      />
+    </PayPalScriptProvider>
+  );
+}
 
 export default function PatientCalendar() {
   const [showFormModal, setShowFormModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [receiptFile, setReceiptFile] = useState(null);
+
   const [services, setServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [paypalPaid, setPaypalPaid] = useState(false);
+  const [paypalDetails, setPaypalDetails] = useState(null);
 
   const minSelectableDate = new Date();
   minSelectableDate.setHours(0, 0, 0, 0);
 
-  const selectedService = services.find((s) => s.id === selectedServiceId);
+  const selectedService = services.find(
+    (s) => s.id === Number(selectedServiceId),
+  );
   console.log(selectedService);
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
@@ -58,6 +96,8 @@ export default function PatientCalendar() {
       return;
     }
 
+    setPaypalPaid(false);
+    setPaypalDetails(null);
     setSelectedSlot(slots);
     setShowFormModal(true);
   };
@@ -86,7 +126,8 @@ export default function PatientCalendar() {
         price: selectedService?.price,
         user_id: userId,
         email: user?.email,
-        paymentMethod,
+        paypalDetails: paypalDetails,
+        paymentStatus: paymentMethod === "paypal" ? "paid" : "pending",
         date: selectedStart.toISOString().split("T")[0],
         startTime: selectedStart.toLocaleTimeString([], {
           hour: "2-digit",
@@ -110,16 +151,8 @@ export default function PatientCalendar() {
             body: JSON.stringify(finalAppointment),
           },
         );
-      }
-      // GCASH / PAYMAYA
-      else {
-        if (!receiptFile) {
-          toast.error("Please upload your payment receipt.");
-          return;
-        }
-
+      } else {
         const uploadData = new FormData();
-        uploadData.append("receipt", receiptFile);
         uploadData.append("data", JSON.stringify(finalAppointment));
 
         response = await fetch(
@@ -245,25 +278,34 @@ export default function PatientCalendar() {
               required: true,
               options: [
                 { label: "Cash", value: "cash" },
-                { label: "GCash", value: "gcash" },
-                { label: "PayMaya", value: "paymaya" },
+                { label: "Paypal", value: "paypal" },
               ],
               onChange: (value) => setPaymentMethod(value),
             },
-            paymentMethod === "gcash" && {
+            paymentMethod === "paypal" && {
               type: "custom",
-              component: <p>GCash: 0975 470 3971</p>,
-            },
-            paymentMethod === "paymaya" && {
-              type: "custom",
-              component: <p>Paymaya: 0917 182 1861</p>,
-            },
-            (paymentMethod === "gcash" || paymentMethod === "paymaya") && {
-              name: "receipt",
-              label: "Upload Receipt",
-              type: "file",
-              required: true,
-              onChange: (file) => setReceiptFile(file),
+              component: (
+                <div>
+                  <p style={{ marginBottom: "10px" }}>
+                    Pay with PayPal to confirm your booking
+                  </p>
+
+                  <PayPalButton
+                    amount={selectedService?.price || "1.00"}
+                    onSuccess={(details) => {
+                      setPaypalPaid(true);
+                      setPaypalDetails(details);
+                      toast.success("PayPal payment successful!");
+                    }}
+                  />
+
+                  {paypalPaid && (
+                    <p style={{ color: "green", marginTop: "10px" }}>
+                      Payment completed ✔
+                    </p>
+                  )}
+                </div>
+              ),
             },
           ].filter(Boolean)}
           submitText="Submit Appointment"
