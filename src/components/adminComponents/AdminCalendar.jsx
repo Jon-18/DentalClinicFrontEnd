@@ -103,7 +103,7 @@ export default function AdminCalendar() {
     console.log(finalAppointment);
     try {
       const res = await fetch(
-        "https://dentalclinicbackend-1qfr.onrender.com/api/allPatientController",
+        "https://dentalclinicbackend-1qfr.onrender.com/api/getAllPatient",
         {
           method: "POST",
           headers: {
@@ -165,7 +165,7 @@ export default function AdminCalendar() {
       onChange: (value, form) => {
         setSelectedServiceId(value);
 
-        const selected = services.find((s) => s.service_id === value);
+        const selected = services.find((s) => s.id === value);
 
         if (!selected) return form;
 
