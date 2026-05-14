@@ -48,6 +48,10 @@ export default function AdminCalendar() {
     }
   }, [showFormModal]);
 
+  const selectedService = services.find((s) => s.id === selectedServiceId);
+  console.log("selectedService", selectedService);
+  console.log("selectedServiceId", selectedServiceId);
+
   /* SLOT SELECT */
   const handleSlotSelect = (slotInfo, generateSlots) => {
     const { start } = slotInfo;
@@ -83,8 +87,6 @@ export default function AdminCalendar() {
       (slot) => slot.start.toISOString() === formData.timeSlot,
     )?.end;
 
-    const selectedService = services.find((s) => s.id === selectedServiceId);
-
     const finalAppointment = {
       ...formData,
       price: selectedService?.price,
@@ -101,7 +103,7 @@ export default function AdminCalendar() {
     console.log(finalAppointment);
     try {
       const res = await fetch(
-        "https://dentalclinicbackend-1qfr.onrender.com/api/createAppointment",
+        "https://dentalclinicbackend-1qfr.onrender.com/api/allPatientController",
         {
           method: "POST",
           headers: {
@@ -126,10 +128,6 @@ export default function AdminCalendar() {
       setShowModalMessage(true);
     }
   };
-
-  const selectedService = services.find(
-    (s) => s.service_id === selectedServiceId,
-  );
 
   /* FORM FIELDS */
   const appointmentFields = [
