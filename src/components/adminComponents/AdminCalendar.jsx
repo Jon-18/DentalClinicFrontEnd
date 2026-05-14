@@ -83,9 +83,7 @@ export default function AdminCalendar() {
       (slot) => slot.start.toISOString() === formData.timeSlot,
     )?.end;
 
-    const selectedService = services.find(
-      (s) => s.service_id === selectedServiceId,
-    );
+    const selectedService = services.find((s) => s.id === selectedServiceId);
 
     const finalAppointment = {
       ...formData,
@@ -102,15 +100,22 @@ export default function AdminCalendar() {
     };
     console.log(finalAppointment);
     try {
-      // const res = await fetch("https://dentalclinicbackend-1qfr.onrender.com/api/getAllPatient", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(finalAppointment),
-      // });
+      const res = await fetch(
+        "https://dentalclinicbackend-1qfr.onrender.com/api/createAppointment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalAppointment),
+        },
+      );
 
-      // const data = await res.json();
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed");
+      }
 
       setShowFormModal(false);
       setModalMessage("Appointment Created!");
